@@ -7,7 +7,7 @@ import type { ReactNode } from "react";
 
 const NAV = [
   { href: "/", label: "Class Timetable", icon: CalendarDays },
-  { href: "/demo", label: "Demo", icon: LayoutGrid },
+  { href: "/demo-table", label: "Demo", icon: LayoutGrid },
 ];
 
 export function AppLayout({ children }: { children: ReactNode }) {

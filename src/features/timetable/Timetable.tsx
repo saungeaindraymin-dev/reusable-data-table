@@ -154,7 +154,7 @@ export function Timetable() {
         </div>
       </div>
 
-      <DataTable<ClassRow>
+      <DataTable
         data={rows}
         columns={classColumns}
         getRowId={(row) => row.id}
