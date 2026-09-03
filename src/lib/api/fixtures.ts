@@ -1,3 +1,4 @@
+import { Deal, DealActivity, DealStage } from "@/features/demo-table/types";
 import type {
   Attendee,
   BookingStatus,
@@ -5,7 +6,6 @@ import type {
   ClassStatus,
   PaymentType,
 } from "@/features/timetable/types";
-import type { Deal, DealActivity, DealStage } from "@/features/demo-table/types";
 
 function mulberry32(seed: number) {
   let a = seed;
@@ -116,7 +116,7 @@ function buildAttendees(
 
 export function generateClasses(count = 64): ClassRow[] {
   const rng = mulberry32(42);
-  const base = new Date("2026-09-02T06:00:00");
+  const anchor = new Date("2026-09-02T06:00:00");
 
   return Array.from({ length: count }).map((_, index) => {
     const id = `cls_${String(index + 1).padStart(3, "0")}`;
@@ -130,8 +130,8 @@ export function generateClasses(count = 64): ClassRow[] {
     const dayOffset = Math.floor(index / 6);
     const hour = 6 + (index % 6) * 2;
 
-    const start = new Date(base);
-    start.setDate(base.getDate() + dayOffset);
+    const start = new Date(anchor);
+    start.setDate(anchor.getDate() + dayOffset);
     start.setHours(hour, 0, 0, 0);
 
     const end = new Date(start);
@@ -199,7 +199,7 @@ const ACTIVITY_SUMMARIES = [
 
 export function generateDeals(count = 38): Deal[] {
   const rng = mulberry32(7);
-  const base = new Date("2026-09-02T00:00:00");
+  const anchor = new Date("2026-09-02T00:00:00");
 
   return Array.from({ length: count }).map((_, index) => {
     const id = `deal_${String(index + 1).padStart(3, "0")}`;
@@ -212,14 +212,14 @@ export function generateDeals(count = 38): Deal[] {
           ? 0
           : 10 + Math.floor(rng() * 80);
 
-    const closeDate = new Date(base);
-    closeDate.setDate(base.getDate() + Math.floor(rng() * 90) - 15);
+    const closeDate = new Date(anchor);
+    closeDate.setDate(anchor.getDate() + Math.floor(rng() * 90) - 15);
 
     const activity: DealActivity[] = Array.from({
       length: 1 + Math.floor(rng() * 4),
     }).map((_, activityIndex) => {
-      const date = new Date(base);
-      date.setDate(base.getDate() - Math.floor(rng() * 30));
+      const date = new Date(anchor);
+      date.setDate(anchor.getDate() - Math.floor(rng() * 30));
       return {
         id: `${id}-act${activityIndex}`,
         date: date.toISOString(),
