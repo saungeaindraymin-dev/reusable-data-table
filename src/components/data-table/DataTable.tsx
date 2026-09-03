@@ -11,7 +11,7 @@ import { ErrorState } from "./_components/states/ErrorState";
 import { TableRow } from "./_components/TableRow";
 import { ExpandedRow } from "./_components/ExpandedRow";
 import { Pagination } from "./_components/Pagination";
-import { useExpansion } from "./hooks/useExpansion";
+import { useExpansion } from "./hooks/useExpension";
 
 const DEFAULT_PAGE_SIZES = [10, 25, 50];
 
