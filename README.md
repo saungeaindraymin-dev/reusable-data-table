@@ -1,6 +1,6 @@
 # Reusable Data Table — Rezerv Assessment (Part 2)
 
-> A generic, fully-typed **Reusable Data Table Component** built from scratch (no table library) with URL-driven state, expandable rows (inline + on-demand), a sticky pinned column, and both client- and server-side modes — built with **Next.js**, **TypeScript**, and **Tailwind CSS**.
+> A generic, fully-typed **Reusable Data Table Component** built from scratch (no table library) with URL-driven state, expandable rows (inline + on-demand), a sticky pinned column, and both client- and server-side modes which is built with **Next.js**, **TypeScript**, and **Tailwind CSS**.
 
 ## Core Features
 
@@ -82,15 +82,81 @@ src/
 
 ```bash
 npm install
-npm run dev      # http://localhost:3000
-npm run build    # production build
+npm run dev      
+npm run build   
 ```
 
-| Route   | What it shows |
-| ------- | ------------- |
-| `/`     | **Real usage** — class timetable, server-side sort/pagination (URL-driven), on-demand attendee rows |
-| `/demo-table` | **Reusability** — deals (different shape), client-side sort/pagination, inline expansion |
+| Route         | What it shows                                                                                       |
+| ------------- | --------------------------------------------------------------------------------------------------- |
+| `/`           | **Real usage** — class timetable, server-side sort/pagination (URL-driven), on-demand attendee rows |
+| `/demo-table` | **Reusability** — deals (different shape), client-side sort/ pagination, inline expansion            |
 
 Together the two pages cover the full matrix: **client + server** modes and **inline + on-demand** expansion.
 
 ---
+
+## Component API — how column definitions work
+
+The table is generic over its row type `T` and driven entirely by `ColumnDef<T>` nothing about the class/attendee shape is baked in.
+
+```ts
+interface ColumnDef<T> {
+  key: string; // unique id + default accessor + sort key
+  header: React.ReactNode;
+  accessor?: (row: T) => unknown; // value for sorting/default cell
+  cell?: (row: T) => React.ReactNode; // custom renderer (badges, …)
+  sortable?: boolean;
+  width?: number | string;
+  pinned?: "left";
+  align?: "left" | "center" | "right";
+}
+```
+
+Column definitions live in `src/features/*/columns.tsx`; the table in
+`src/components/data-table/` never imports either feature.
+
+---
+
+## Client-side vs server-side (sort & pagination)
+
+One component, two modes, selected by `mode`:
+
+- **`mode="client"`** — `data` is the full dataset; `useDataTable` filters => sorts => paginates it locally. Used by the deals demo.
+- **`mode="server"`** — `data` is only the current page, prepared by the parent; the table emits state via `onStateChange` and reads `totalRows` for the page count. Used by the timetable, where the state _is_ the URL and each change re-fetches.
+
+Controlled vs uncontrolled is handled by `useControllableState`: pass `state` and the parent owns it; omit it and state lives locally from `defaultState`.
+
+---
+
+## Expandable rows — inline & on-demand
+
+Configured with a single `expansion` prop; expanded content renders full-width below the parent with a height animation.
+
+- **Inline** (`kind: "inline"`) — children already on the row; rendered synchronously (deals → activity log).
+- **On-demand** (`kind: "on-demand"`) — `load(row)` runs lazily on first open; `useExpansion` tracks loading / success / error per row, caches results, and exposes retry (timetable → attendees, which fail ~1 in 5 to show the error path). The attendee panel is itself a nested `<DataTable>`.
+
+---
+
+## Sticky column
+
+A column with `pinned: "left"` (plus the expand-toggle column) is `position: sticky; left: <offset>`. `sticky.ts` computes each pinned column's cumulative left offset; a gradient shadow appears on the last pinned column once `scrollLeft > 0`. z-index layering keeps the header above the pinned column corner:
+
+```
+header pinned corner (4) > header row (3) > body pinned column (2) > body
+```
+
+---
+
+## State management decision
+
+**Plain React — no Redux/Zustand.** Table state is inherently _per-instance_ (two tables must not share a page number), and the brief wants controlled **and** uncontrolled. A global store fights both. `useControllableState` gives the caller the choice; for the timetable, the "store" is simply the URL.
+
+---
+
+## Tradeoffs & assumptions
+
+- **No virtualization** — datasets here are moderate; row virtualization is the next step for tens of thousands of rows (isolated to the body renderer).
+- **Pinned columns assume numeric widths** and that pinned columns come first.
+- **Filters are substring/case-insensitive** on stringified values; the timetable already pushes search + status to the mock server.
+- **Mock APIs** simulate latency/failures in-memory (`src/lib/api/`); no backend.
+- **Reduced motion** honored via a global CSS reset.
