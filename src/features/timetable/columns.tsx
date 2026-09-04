@@ -93,7 +93,7 @@ export const classColumns: ColumnDef<ClassRow>[] = [
         <div className="flex items-center gap-2">
           <div className="h-1.5 w-16 overflow-hidden rounded-full bg-border">
             <div
-              className="h-full rounded-full bg-brand transition-all"
+              className="h-full rounded-full bg-brand-accent transition-all"
               style={{ width: `${Math.min(100, percent)}%` }}
             />
           </div>

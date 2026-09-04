@@ -1,4 +1,4 @@
-# Reusable Data Table — Rezerv Assessment (Part 2)
+# Reusable Data Table - Rezerv Assessment (Part 2)
 
 > A generic, fully-typed **Reusable Data Table Component** built from scratch (no table library) with URL driven state, expandable rows (inline and on-demand), a sticky pinned column, and both client-side and server-side modes which is built with **Next.js**, **TypeScript**, and **Tailwind CSS**.
 

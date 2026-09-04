@@ -17,7 +17,7 @@ export function AppLayout({ children }: { children: ReactNode }) {
     <div className="min-h-full">
       <header className="sticky top-0 z-40 border-b border-border bg-white/80 backdrop-blur">
         <div className="mx-auto flex max-w-6xl items-center gap-4 px-4 py-3">
-          <Link href="/" className="flex items-center gap-2 font-semibold">
+          <Link href="/" className="flex items-center gap-2 font-semibold text-brand text-3xl">
             <span>DataTable</span>
           </Link>
           <nav className="flex items-center gap-1">
