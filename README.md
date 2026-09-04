@@ -1,6 +1,6 @@
 # Reusable Data Table — Rezerv Assessment (Part 2)
 
-> A generic, fully-typed **Reusable Data Table Component** built from scratch (no table library) with URL-driven state, expandable rows (inline + on-demand), a sticky pinned column, and both client- and server-side modes which is built with **Next.js**, **TypeScript**, and **Tailwind CSS**.
+> A generic, fully-typed **Reusable Data Table Component** built from scratch (no table library) with URL driven state, expandable rows (inline and on-demand), a sticky pinned column, and both client-side and server-side modes which is built with **Next.js**, **TypeScript**, and **Tailwind CSS**.
 
 ## Core Features
 
@@ -17,11 +17,11 @@
 - **Framework:** Next.js 16 (App Router) / React 19
 - **Language:** TypeScript (the table is generic over its row type)
 - **Styling:** Tailwind CSS v4
-- **State:** Plain React (`useState` + controlled/uncontrolled hook) — no Redux/Zustand
+- **State:** Plain React (`useState` + controlled/uncontrolled hook) no Redux/Zustand
 - **URL State:** Next `useSearchParams` / `useRouter`
 - **Animation:** `motion` (expand/collapse, reduced-motion aware)
 - **Icons:** `lucide-react`
-- **Mock API:** In-memory endpoints with artificial latency + show errors
+- **Mock API:** In-memory endpoints with artificial latency and show errors
 
 ---
 
@@ -30,10 +30,10 @@
 ```text
 src/
 ├── app/                                # Next.js App Router
-│   ├── page.tsx                        # "/" → Class Timetable (real usage)
-│   ├── demo-table/page.tsx             # "/demo-table" → Deals (reusability proof)
+│   ├── page.tsx                        # "/" => Class Timetable (real usage)
+│   ├── demo-table/page.tsx             # "/demo-table" => Deals (reusability proof)
 │   ├── layout.tsx
-│   └── globals.css                     # Tailwind + design tokens
+│   └── globals.css                     # Tailwind and design tokens
 ├── components/
 │   ├── AppLayout.tsx                   # Top nav layout
 │   ├── data-table/
@@ -61,18 +61,18 @@ src/
 │       ├── Button.tsx
 │       └── Spinner.tsx
 ├── features/
-│   ├── timetable/                      # Class timetable: server mode + on-demand attendees
-│   │   ├── columns.tsx                 # classColumns + attendeeColumns (ColumnDef[])
+│   ├── timetable/                      # Class timetable: server mode and on-demand attendees
+│   │   ├── columns.tsx                 # classColumns and attendeeColumns (ColumnDef[])
 │   │   ├── types.ts                    # ClassRow, Attendee
-│   │   └── Timetable.tsx               # composes DataTable + useTableUrlState
-│   └── demo-table/                     # Deals: client mode + inline expansion
+│   │   └── Timetable.tsx               # composes DataTable and useTableUrlState
+│   └── demo-table/                     # Deals: client mode and inline expansion
 │       ├── columns.tsx                 # dealColumns
 │       ├── types.ts                    # Deal, DealActivity
 │       └── DemoTable.tsx
 └── lib/
     └── api/                            # Mock production endpoints
         ├── fixtures.ts                 # seeded data generator (stable output)
-        ├── classes.ts                  # server-shaped fetchClasses + lazy fetchAttendees
+        ├── classes.ts                  # server-shaped fetchClasses and lazy fetchAttendees
         └── demo.ts                     # fetch demo data
 ```
 
@@ -82,16 +82,16 @@ src/
 
 ```bash
 npm install
-npm run dev      
-npm run build   
+npm run dev
+npm run build
 ```
 
 | Route         | What it shows                                                                                       |
 | ------------- | --------------------------------------------------------------------------------------------------- |
 | `/`           | **Real usage** — class timetable, server-side sort/pagination (URL-driven), on-demand attendee rows |
-| `/demo-table` | **Reusability** — deals (different shape), client-side sort/ pagination, inline expansion            |
+| `/demo-table` | **Reusability** — deals (different shape), client-side sort/ pagination, inline expansion           |
 
-Together the two pages cover the full matrix: **client + server** modes and **inline + on-demand** expansion.
+Together the two pages cover the full matrix: **client and server** modes and **inline and on-demand** expansion.
 
 ---
 
@@ -101,7 +101,7 @@ The table is generic over its row type `T` and driven entirely by `ColumnDef<T>`
 
 ```ts
 interface ColumnDef<T> {
-  key: string; // unique id + default accessor + sort key
+  key: string; // unique id / default accessor / sort key
   header: React.ReactNode;
   accessor?: (row: T) => unknown; // value for sorting/default cell
   cell?: (row: T) => React.ReactNode; // custom renderer (badges, …)
@@ -124,16 +124,16 @@ One component, two modes, selected by `mode`:
 - **`mode="client"`** — `data` is the full dataset; `useDataTable` filters => sorts => paginates it locally. Used by the deals demo.
 - **`mode="server"`** — `data` is only the current page, prepared by the parent; the table emits state via `onStateChange` and reads `totalRows` for the page count. Used by the timetable, where the state _is_ the URL and each change re-fetches.
 
-Controlled vs uncontrolled is handled by `useControllableState`: pass `state` and the parent owns it; omit it and state lives locally from `defaultState`.
+Controlled vs uncontrolled is handled by `useControllableState`: pass `state` and the parent owns it, omit it and state lives locally from `defaultState`.
 
 ---
 
 ## Expandable rows — inline & on-demand
 
-Configured with a single `expansion` prop; expanded content renders full-width below the parent with a height animation.
+Configured with a single `expansion` prop, expanded content renders full-width below the parent with a height animation.
 
 - **Inline** (`kind: "inline"`) — children already on the row; rendered synchronously (deals → activity log).
-- **On-demand** (`kind: "on-demand"`) — `load(row)` runs lazily on first open; `useExpansion` tracks loading / success / error per row, caches results, and exposes retry (timetable → attendees, which fail ~1 in 5 to show the error path). The attendee panel is itself a nested `<DataTable>`.
+- **On-demand** (`kind: "on-demand"`) — `load(row)` runs lazily on first open; `useExpansion` tracks loading / success / error per row, caches results, and exposes retry (timetable => attendees, which fail ~1 in 5 to show the error path). The attendee panel is itself a nested `<DataTable>`.
 
 ---
 

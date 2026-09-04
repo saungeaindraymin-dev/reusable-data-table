@@ -1,11 +1,10 @@
 "use client";
 
 import { useCallback, useEffect, useRef, useState } from "react";
-import { Check, Link2, Search, X } from "lucide-react";
+import { Search, X } from "lucide-react";
 import { DataTable } from "@/components/data-table/DataTable";
 import { useTableUrlState } from "@/components/data-table/hooks/useTableUrlState";
 import type { ExpansionConfig } from "@/components/data-table/core/types";
-import { Button } from "@/components/ui/Button";
 import { fetchAttendees, fetchClasses } from "@/lib/api/classes";
 import type { Attendee, ClassRow, ClassStatus } from "./types";
 import { attendeeColumns, classColumns } from "./columns";
@@ -179,7 +178,7 @@ function AttendeeTable({ attendees }: { attendees: Attendee[] }) {
       <p className="mb-2 text-xs font-semibold uppercase tracking-wide text-muted">
         Attendees ({attendees.length})
       </p>
-      <DataTable<Attendee>
+      <DataTable
         data={attendees}
         columns={attendeeColumns}
         getRowId={(attendee) => attendee.id}
@@ -207,23 +206,3 @@ export function PageHeader({
   );
 }
 
-function CopyLinkButton() {
-  const [copied, setCopied] = useState(false);
-
-  async function copy() {
-    try {
-      await navigator.clipboard.writeText(window.location.href);
-      setCopied(true);
-      setTimeout(() => setCopied(false), 1600);
-    } catch {
-      setCopied(false);
-    }
-  }
-
-  return (
-    <Button variant="secondary" size="sm" onClick={copy}>
-      {copied ? <Check size={14} /> : <Link2 size={14} />}
-      {copied ? "Copied" : "Copy link"}
-    </Button>
-  );
-}

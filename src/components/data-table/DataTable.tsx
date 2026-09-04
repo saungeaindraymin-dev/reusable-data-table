@@ -65,16 +65,15 @@ export function DataTable<T>(props: DataTableProps<T>) {
   const isError = status === "error";
   const isEmpty = !isLoading && !isError && table.rows.length === 0;
 
-  const containerClass = `overflow-hidden rounded-xl border border-border bg-white shadow-sm${className ? ` ${className}` : ""}`;
-  const scrollClass = `overflow-auto${containerClassName ? ` ${containerClassName}` : ""}`;
+  const containerClass = `flex flex-col overflow-hidden rounded-xl border border-border bg-white shadow-sm${className ? ` ${className}` : ""}`;
+  const scrollClass = `min-h-0 flex-1 overflow-x-auto overflow-y-auto${containerClassName ? ` ${containerClassName}` : ""}`;
 
   return (
-    <div className={containerClass}>
+    <div className={containerClass} style={{ maxHeight }}>
       <div
         ref={scrollRef}
         onScroll={(e) => setScrolled(e.currentTarget.scrollLeft > 0)}
         className={scrollClass}
-        style={{ maxHeight }}
       >
         <table
           className="w-full border-separate border-spacing-0 text-left"
