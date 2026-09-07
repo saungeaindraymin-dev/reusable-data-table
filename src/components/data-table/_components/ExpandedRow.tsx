@@ -71,7 +71,7 @@ function ExpandedBody<T>({
     return (
       <div className="flex items-center gap-2 py-3 text-sm text-muted">
         <Spinner />
-        Loading details…
+        Loading…
       </div>
     );
   }

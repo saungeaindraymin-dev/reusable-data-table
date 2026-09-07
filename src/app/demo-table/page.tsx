@@ -1,10 +1,10 @@
 import { AppLayout } from "@/components/AppLayout";
-import { DemoView } from "@/features/demo-table/DemoTable";
+import { DemoTablePage } from "@/features/demo-table/DemoTablePage";
 
 export default function DemoPage() {
   return (
     <AppLayout>
-      <DemoView />
+      <DemoTablePage />
     </AppLayout>
   );
 }

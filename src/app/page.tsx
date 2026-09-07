@@ -1,7 +1,6 @@
 import { AppLayout } from "@/components/AppLayout";
-import { Timetable } from "@/features/timetable/Timetable";
+import { TimetablePage } from "@/features/timetable/TimetablePage";
 import { Suspense } from "react";
-
 
 export default function Home() {
   return (
@@ -9,7 +8,7 @@ export default function Home() {
       <Suspense
         fallback={<div className="py-10 text-sm text-muted">Loading…</div>}
       >
-        <Timetable/>
+        <TimetablePage />
       </Suspense>
     </AppLayout>
   );

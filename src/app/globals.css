@@ -12,10 +12,10 @@
   --muted: #6b7280;
   --muted-2: #9ca3af;
 
-  --brand: #0c2b21; /* deep green — nav / footer / primary actions */
-  --brand-hover: #143a2c; /* deep green, lifted for hover states */
-  --brand-accent: #1fc16b; /* bright emerald — highlights / CTAs */
-  --brand-soft: #e7f5ee; /* light green tint — subtle surfaces */
+  --brand: #0c2b21; 
+  --brand-hover: #143a2c;
+  --brand-accent: #1fc16b;
+  --brand-soft: #e7f5ee; 
 
   --ring: #1fc16b;
 

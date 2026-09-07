@@ -5,9 +5,9 @@ import { Search, X } from "lucide-react";
 import { DataTable } from "@/components/data-table/DataTable";
 import { useTableUrlState } from "@/components/data-table/hooks/useTableUrlState";
 import type { ExpansionConfig } from "@/components/data-table/core/types";
-import { fetchAttendees, fetchClasses } from "@/lib/api/classes";
 import type { Attendee, ClassRow, ClassStatus } from "./types";
-import { attendeeColumns, classColumns } from "./columns";
+import { attendeeColumns, classColumns } from "./useColumns";
+import { fetchAttendees, fetchClasses } from "@/api/classes";
 
 const STATUS_OPTIONS: (ClassStatus | "")[] = [
   "",
@@ -16,7 +16,7 @@ const STATUS_OPTIONS: (ClassStatus | "")[] = [
   "Cancelled",
 ];
 
-export function Timetable() {
+export function TimetablePage() {
   const { state, setState } = useTableUrlState();
 
   const [rows, setRows] = useState<ClassRow[]>([]);
@@ -205,4 +205,3 @@ export function PageHeader({
     </div>
   );
 }
-

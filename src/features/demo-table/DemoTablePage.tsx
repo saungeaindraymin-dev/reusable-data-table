@@ -9,9 +9,9 @@ import {
   type TableState,
 } from "@/components/data-table/core/types";
 import type { Deal, DealActivity } from "./types";
-import { dealColumns } from "./columns";
-import { PageHeader } from "../timetable/Timetable";
-import { fetchDeals } from "@/lib/api/demo";
+import { dealColumns } from "./useColumns";
+import { PageHeader } from "../timetable/TimetablePage";
+import { fetchDeals } from "@/api/demo";
 
 const activityIcon = {
   Call: Phone,
@@ -25,7 +25,7 @@ const dateFmt = new Intl.DateTimeFormat("en-US", {
   day: "numeric",
 });
 
-export function DemoView() {
+export function DemoTablePage() {
   const [data, setData] = useState<Deal[]>([]);
   const [status, setStatus] = useState<"loading" | "idle" | "error">("loading");
   const [simulateError, setSimulateError] = useState(false);

@@ -1,16 +1,16 @@
 # Reusable Data Table - Rezerv Assessment (Part 2)
 
-> A generic, fully-typed **Reusable Data Table Component** built from scratch (no table library) with URL driven state, expandable rows (inline and on-demand), a sticky pinned column, and both client-side and server-side modes which is built with **Next.js**, **TypeScript**, and **Tailwind CSS**.
+> Developed a **Reusable Data Table Component** from scratch using **Next.js, TypeScript, and Tailwind CSS**. The table supports expandable rows, sticky columns, URL-based state management, and both client-side and server-side data handling.
 
 ## Core Features
 
-- **From-Scratch Engine:** No TanStack / AG Grid / MUI DataGrid. A hand-built headless layer (sorting, pagination, expansion) rendered by a thin UI shell.
-- **URL-Driven State:** Sort, filters, search, and pagination are serialized to the query string and copy the link and the exact same view comes back for anyone who opens it.
-- **Client & Server Modes:** The same component sorts and paginates locally, or emits changes and lets the parent supply the page (used by the URL-backed timetable).
-- **Expandable Rows — Both Modes:** Inline children rendered from the row, or on-demand children fetched lazily with their own loading / error / retry state.
-- **Sticky Pinned Column:** The first column stays fixed during horizontal scroll, with a shadow cue that appears once content slides beneath it.
-- **Full State Coverage:** Column-matched skeleton loading, plus empty and error states consistent with the dashboard.
-- **Reusable, Not Hard-Coded:** Proven across two differently-shaped datasets which is a class timetable and a sales-deals demo.
+- **Built from scratch:** Created the table logic without using libraries like TanStack Table, AG Grid, or MUI DataGrid. The component handles sorting, pagination, and row expansion with a simple UI layer on top.
+- **URL-based state:** Sorting, filtering, search, and pagination are stored in the URL, so the same table view can be shared and opened through a link.
+- **Client & server-side support:** The table can handle sorting and pagination on the client, or pass those changes to the parent component for server-side data fetching.
+- **Expandable rows:** Supports both inline row expansion and lazy-loaded child data, including loading, error, and retry states.
+- **Sticky column:** The first column stays visible when scrolling horizontally, with a subtle shadow to show when content moves behind it.
+- **Loading & empty states:** Includes skeleton loading, empty states, and error handling that match the rest of the dashboard UI.
+- **Reusable across datasets:** Built the component to work with different types of data rather than being tied to one specific table. It has been used for both a class timetable and a sales deals demo.
 
 ## Tech Stack
 
@@ -29,51 +29,50 @@
 
 ```text
 src/
+├── api/                                # Mock production endpoints
+│   ├── classes.ts                      # fetchClasses and lazy fetchAttendees
+│   ├── demo.ts                         # fetch demo data
+│   ├── fixtures.ts                     # seeded data (stable output)
 ├── app/                                # Next.js App Router
-│   ├── page.tsx                        # "/" => Class Timetable (real usage)
-│   ├── demo-table/page.tsx             # "/demo-table" => Deals (reusability proof)
+│   ├── page.tsx                        # "/" => Class Timetable
+│   ├── demo-table/page.tsx             # "/demo-table" => Deals (table reusability)
 │   ├── layout.tsx
 │   └── globals.css                     # Tailwind and design tokens
 ├── components/
 │   ├── AppLayout.tsx                   # Top nav layout
 │   ├── data-table/
-│   │   ├── DataTable.tsx               # The shell: wires hooks => render parts
+│   │   ├── DataTable.tsx
 │   │   ├── core/                       # Pure logic (no React)
 │   │   │   ├── types.ts                # ColumnDef<T>, TableState, DataTableProps<T>
-│   │   │   ├── utils.ts                # compare/sort/filter/paginate and URL serialize
+│   │   │   ├── utils.ts                # compare/sort/filter/paginate
 │   │   │   └── sticky.ts               # pinned-column offset and z-index math
 │   │   ├── hooks/                      # State
 │   │   │   ├── useControllableState.ts # controlled/uncontrolled primitive
-│   │   │   ├── useDataTable.ts         # engine: filter => sort => paginate
+│   │   │   ├── useDataTable.ts         # filter => sort => paginate
 │   │   │   ├── useExpansion.ts         # open rows + on-demand lifecycle
 │   │   │   └── useTableUrlState.ts     # binds TableState & URL
-│   │   └── _components/                # render pieces
+│   │   └── _components/                # render
 │   │       ├── TableHeader.tsx
 │   │       ├── TableRow.tsx
 │   │       ├── ExpandedRow.tsx
 │   │       ├── Skeleton.tsx
 │   │       ├── Pagination.tsx
-│   │       └── states/
-│   │           ├── EmptyState.tsx
-│   │           └── ErrorState.tsx
+│   │       ├── EmptyState.tsx
+│   │       └── ErrorState.tsx
 │   └── ui/                             # small necessary UI components
 │       ├── Badge.tsx
 │       ├── Button.tsx
 │       └── Spinner.tsx
 ├── features/
-│   ├── timetable/                      # Class timetable: server mode and on-demand attendees
-│   │   ├── columns.tsx                 # classColumns and attendeeColumns (ColumnDef[])
+│   ├── timetable/                      # Class timetable
+│   │   ├── useColumns.tsx              # classColumns and attendeeColumns (ColumnDef[])
 │   │   ├── types.ts                    # ClassRow, Attendee
-│   │   └── Timetable.tsx               # composes DataTable and useTableUrlState
+│   │   └── TimetablePage.tsx           # composes DataTable and useTableUrlState
 │   └── demo-table/                     # Deals: client mode and inline expansion
-│       ├── columns.tsx                 # dealColumns
-│       ├── types.ts                    # Deal, DealActivity
-│       └── DemoTable.tsx
-└── lib/
-    └── api/                            # Mock production endpoints
-        ├── fixtures.ts                 # seeded data generator (stable output)
-        ├── classes.ts                  # server-shaped fetchClasses and lazy fetchAttendees
-        └── demo.ts                     # fetch demo data
+│       ├── useColumns.tsx              # dealColumns
+│       ├── types.ts
+│       └── DemoTablePage.tsx
+└──
 ```
 
 ---
@@ -112,51 +111,51 @@ interface ColumnDef<T> {
 }
 ```
 
-Column definitions live in `src/features/*/columns.tsx`; the table in
+Column definitions live in `src/features/*/useColumns.tsx`; the table in
 `src/components/data-table/` never imports either feature.
 
 ---
 
 ## Client-side vs server-side (sort & pagination)
 
-One component, two modes, selected by `mode`:
+The same table component supports both client-side and server-side handling, controlled by the mode prop.
 
-- **`mode="client"`** — `data` is the full dataset; `useDataTable` filters => sorts => paginates it locally. Used by the deals demo.
-- **`mode="server"`** — `data` is only the current page, prepared by the parent; the table emits state via `onStateChange` and reads `totalRows` for the page count. Used by the timetable, where the state _is_ the URL and each change re-fetches.
+- **`mode="client"`** — The component receives the complete dataset and handles filtering, sorting, and pagination locally. This is used in the sales deals demo.
+- **`mode="server"`** — The component only receives the data for the current page. The parent handles the data fetching, while the table sends state changes through onStateChange and uses totalRows to calculate the number of pages. This is used for the timetable, where the table state is synced with the URL and changing the state triggers a new fetch.
 
-Controlled vs uncontrolled is handled by `useControllableState`: pass `state` and the parent owns it, omit it and state lives locally from `defaultState`.
+The component also supports both controlled and uncontrolled state. With useControllableState, the parent can manage the table state by passing state, or the component can manage it internally using defaultState.
 
 ---
 
 ## Expandable rows — inline & on-demand
 
-Configured with a single `expansion` prop, expanded content renders full-width below the parent with a height animation.
+The table supports two types of expandable rows through a single expansion prop. When a row is expanded, the content appears underneath it with a simple height animation.
 
-- **Inline** (`kind: "inline"`) — children already on the row; rendered synchronously (deals → activity log).
-- **On-demand** (`kind: "on-demand"`) — `load(row)` runs lazily on first open; `useExpansion` tracks loading / success / error per row, caches results, and exposes retry (timetable => attendees, which fail ~1 in 5 to show the error path). The attendee panel is itself a nested `<DataTable>`.
+- **Inline** (`kind: "inline"`) — The child data is already included in the row, so it can be displayed immediately. This is used in the deals demo to show the activity log.
+- **On-demand** (`kind: "on-demand"`) — The child data is loaded only when the row is opened for the first time. useExpansion keeps track of each row's loading, success, and error state, while also caching the loaded data and providing a retry option. The timetable uses this to load attendee data, with occasional failures included to test the error and retry states.
+
+The attendee list is also displayed using a nested <DataTable> component.
 
 ---
 
 ## Sticky column
 
-A column with `pinned: "left"` (plus the expand-toggle column) is `position: sticky; left: <offset>`. `sticky.ts` computes each pinned column's cumulative left offset; a gradient shadow appears on the last pinned column once `scrollLeft > 0`. z-index layering keeps the header above the pinned column corner:
+The table supports pinned columns using pinned: "left". The expand-toggle column is also treated as a pinned column, so it stays visible while scrolling horizontally.
+
+sticky.ts calculates the left offset for each pinned column based on the columns before it. When the table is scrolled, a subtle shadow appears on the last pinned column to make it clear that the other content is moving behind it.
+
+The z-index values are also layered to keep the header and pinned cells in the correct order:
 
 ```
-header pinned corner (4) > header row (3) > body pinned column (2) > body
+Header pinned corner (4) > Header row (3) > Body pinned column (2) > Body content
 ```
 
 ---
 
 ## State management decision
 
-**Plain React — no Redux/Zustand.** Table state is inherently _per-instance_ (two tables must not share a page number), and the brief wants controlled **and** uncontrolled. A global store fights both. `useControllableState` gives the caller the choice; for the timetable, the "store" is simply the URL.
+**Plain React — no Redux/Zustand.** I kept the table state local to each table instance instead of using a global state library. This is because each table should manage its own state independently, for example, two tables on the same page shouldn't share the same pagination or sorting state.
 
----
+The component supports both controlled and uncontrolled state through useControllableState, so the parent can take control when needed, or the table can manage its own state internally.
 
-## Tradeoffs & assumptions
-
-- **No virtualization** — datasets here are moderate; row virtualization is the next step for tens of thousands of rows (isolated to the body renderer).
-- **Pinned columns assume numeric widths** and that pinned columns come first.
-- **Filters are substring/case-insensitive** on stringified values; the timetable already pushes search + status to the mock server.
-- **Mock APIs** simulate latency/failures in-memory (`src/lib/api/`); no backend.
-- **Reduced motion** honored via a global CSS reset.
+For the timetable, the URL acts as the source of truth. This keeps the table state shareable and makes it easy to reload or share the current view without introducing another global store.
