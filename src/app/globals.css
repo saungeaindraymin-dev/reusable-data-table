@@ -4,6 +4,7 @@
   color-scheme: light;
 
   --background: #f6f7f9;
+  --surface: #ffffff;
   --surface-muted: #f9fafb;
   --border: #e5e7eb;
   --border-strong: #d1d5db;
@@ -24,6 +25,7 @@
 
 @theme inline {
   --color-background: var(--background);
+  --color-surface: var(--surface);
   --color-surface-muted: var(--surface-muted);
   --color-border: var(--border);
   --color-border-strong: var(--border-strong);

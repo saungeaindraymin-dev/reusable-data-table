@@ -10,7 +10,7 @@ export function EmptyState({ message }: { message?: ReactNode }) {
       <p className="text-sm font-medium text-foreground">
         {message ?? "No results"}
       </p>
-      <p className="text-sm text-muted">Try again filters or search.</p>
+      <p className="text-sm text-muted">Try adjusting your filters or search.</p>
     </div>
   );
 }

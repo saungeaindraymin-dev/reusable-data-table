@@ -65,7 +65,7 @@ export function DataTable<T>(props: DataTableProps<T>) {
   const isError = status === "error";
   const isEmpty = !isLoading && !isError && table.rows.length === 0;
 
-  const containerClass = `flex flex-col overflow-hidden rounded-xl border border-border bg-white shadow-sm${className ? ` ${className}` : ""}`;
+  const containerClass = `flex flex-col overflow-hidden rounded-xl border border-border bg-surface shadow-sm${className ? ` ${className}` : ""}`;
   const scrollClass = `min-h-0 flex-1 overflow-x-auto overflow-y-auto${containerClassName ? ` ${containerClassName}` : ""}`;
 
   return (

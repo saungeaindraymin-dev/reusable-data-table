@@ -25,10 +25,16 @@ export function TimetablePage() {
   const [simulateError, setSimulateError] = useState(false);
 
   const [searchDraft, setSearchDraft] = useState(state.search);
+
   useEffect(() => setSearchDraft(state.search), [state.search]);
 
   const requestId = useRef(0);
   const statusFilter = state.filters.status ?? "";
+
+  const stateRef = useRef(state);
+  useEffect(() => {
+    stateRef.current = state;
+  }, [state]);
 
   const load = useCallback(async () => {
     const id = ++requestId.current;
@@ -68,14 +74,14 @@ export function TimetablePage() {
   }, [load]);
 
   useEffect(() => {
-    if (searchDraft === state.search) return;
+    if (searchDraft === stateRef.current.search) return;
 
     const timer = setTimeout(() => {
-      setState({ ...state, search: searchDraft, page: 1 });
+      setState({ ...stateRef.current, search: searchDraft, page: 1 });
     }, 350);
 
     return () => clearTimeout(timer);
-  }, [searchDraft]);
+  }, [searchDraft, setState]);
 
   function changeStatusFilter(value: ClassStatus | "") {
     const filters = { ...state.filters };

@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { CalendarDays, LayoutGrid, Table2 } from "lucide-react";
+import { CalendarDays, LayoutGrid } from "lucide-react";
 import type { ReactNode } from "react";
 
 const NAV = [

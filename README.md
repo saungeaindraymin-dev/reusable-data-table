@@ -2,6 +2,9 @@
 
 > Developed a **Reusable Data Table Component** from scratch using **Next.js, TypeScript, and Tailwind CSS**. The table supports expandable rows, sticky columns, URL-based state management, and both client-side and server-side data handling.
 
+- **Repository:** https://github.com/saungeaindraymin-dev/reusable-data-table.git
+- **Live demo:** [reusable-data-table.vercel.app](https://reusable-data-table.vercel.app)
+
 ## Core Features
 
 - **Built from scratch:** Created the table logic without using libraries like TanStack Table, AG Grid, or MUI DataGrid. The component handles sorting, pagination, and row expansion with a simple UI layer on top.

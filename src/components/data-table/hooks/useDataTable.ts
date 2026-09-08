@@ -1,4 +1,4 @@
-import { useCallback, useMemo } from "react";
+import { useCallback, useEffect, useMemo } from "react";
 import {
   DEFAULT_TABLE_STATE,
   type ColumnDef,
@@ -76,6 +76,15 @@ export function useDataTable<T>(params: Params<T>): Result<T> {
 
     return { rows, pageCount, total };
   }, [mode, data, columns, tableState, totalRows]);
+
+  // Reconcile an out-of-range page (e.g. ?page=999 in the URL, or the page count
+  // shrinking after a filter) back to the last valid page, once the total is known.
+  // Guarded by total > 0 so it never fires mid-load (server mode) or on empty data.
+  useEffect(() => {
+    if (derived.total > 0 && tableState.page > derived.pageCount) {
+      setTableState((prev) => ({ ...prev, page: derived.pageCount }));
+    }
+  }, [derived.total, derived.pageCount, tableState.page, setTableState]);
 
   const toggleSort = useCallback(
     (key: string) => {
