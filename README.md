@@ -1,4 +1,4 @@
-# Reusable Data Table - Rezerv Assessment (Part 2)
+# Reusable Data Table
 
 > Developed a **Reusable Data Table Component** from scratch using **Next.js, TypeScript, and Tailwind CSS**. The table supports expandable rows, sticky columns, URL-based state management, and both client-side and server-side data handling.
 

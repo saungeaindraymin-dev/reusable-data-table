@@ -29,6 +29,7 @@ const SORT_ACCESSORS: Record<string, (row: ClassRow) => string | number> = {
   time: (row) => row.start,
   attendance: (row) => row.booked / Math.max(1, row.capacity),
   status: (row) => row.status,
+  
 };
 
 export async function fetchClasses(

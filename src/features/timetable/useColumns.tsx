@@ -49,7 +49,6 @@ export const classColumns: ColumnDef<ClassRow>[] = [
     key: "className",
     header: "Class",
     sortable: true,
-    pinned: "left",
     width: 200,
     cell: (row) => (
       <div className="flex flex-col">
@@ -63,6 +62,7 @@ export const classColumns: ColumnDef<ClassRow>[] = [
   {
     key: "instructor",
     header: "Instructor",
+    pinned: "left",
     sortable: true,
     width: 170,
   },
@@ -78,6 +78,13 @@ export const classColumns: ColumnDef<ClassRow>[] = [
       </span>
     ),
   },
+  {
+    key: "room",
+    header: "Room",
+    sortable: true,
+    width: 190,
+  },
+
   {
     key: "attendance",
     header: "Attendance",

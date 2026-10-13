@@ -12,6 +12,12 @@ export interface Attendee {
   bookingStatus: BookingStatus;
 }
 
+export interface Room {
+  id: string;
+  name: string;
+  floor: number;
+}
+
 export interface ClassRow {
   id: string;
   className: string;
@@ -22,4 +28,6 @@ export interface ClassRow {
   capacity: number;
   status: ClassStatus;
   attendees?: Attendee[];
+  rooms?: Room[];
 }
+
